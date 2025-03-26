@@ -19,9 +19,10 @@ return new class extends Migration
             $table->string('password');
             
             $table->string('picture')->nullable();
-            $table->enum('gender', ['Male', 'Female', 'Other']);
+            $table->enum('gender', ['Male', 'Female'])->nullable();
             $table->text('bio')->nullable();
             $table->enum('role', ['user', 'admin'])->default('user');
+            $table->timestamp('deleted_at')->nullable();
 
             $table->rememberToken();
             $table->timestamps();
