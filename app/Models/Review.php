@@ -9,4 +9,13 @@ class Review extends Model
 {
     /** @use HasFactory<\Database\Factories\ReviewFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'reservation_id', 'rating', 'comment'
+    ];
+
+    public function reservation()
+    {
+        return $this->belongsTo(Reservation::class);
+    }
 }
