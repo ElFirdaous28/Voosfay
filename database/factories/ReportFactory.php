@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Member;
+use App\Models\Report;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,15 +11,18 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ReportFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    protected $model = Report::class;
+
+    public function definition()
     {
+        $reporter = Member::factory()->create();
+        $reportedMember = Member::factory()->create();
+
         return [
-            //
+            'reporter_id' => $reporter->id,
+            'reported_member_id' => $reportedMember->id,
+            'reason' => $this->faker->sentence,
+            'status' => $this->faker->randomElement(['pending', 'reviewed', 'resolved']),
         ];
     }
 }

@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Member;
+use App\Models\Reservation;
+use App\Models\Ride;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,15 +12,14 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ReservationFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    protected $model = Reservation::class;
+
+    public function definition()
     {
         return [
-            //
+            'ride_id' => Ride::factory(),
+            'member_id' => Member::factory(),
+            'status' => $this->faker->randomElement(['confirmed', 'pending', 'cancelled']),
         ];
     }
 }

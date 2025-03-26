@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,11 @@ class MemberFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'user_id' => User::factory(),
+            'phone' => $this->faker->unique()->phoneNumber,
+            'vehicle_type' => $this->faker->randomElement(['Sedan', 'SUV', 'Hatchback', 'Wagon']),
+            'vehicle_plate' => strtoupper(Str::random(3) . $this->faker->numerify('###')),
+            'vehicle_color' => $this->faker->colorName,
         ];
     }
 }

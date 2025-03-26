@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Ride;
+use App\Models\Stop;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -14,10 +16,14 @@ class StopFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition(): array
+    protected $model = Stop::class;
+
+    public function definition()
     {
         return [
-            //
+            'ride_id' => Ride::factory(),
+            'place_name' => $this->faker->city,
+            'time' => $this->faker->dateTimeBetween('now', '+1 month'),
         ];
     }
 }
