@@ -20,8 +20,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory()->withRole()->count(1)->create();
-
         User::factory()->count(5)->create();
         Member::factory()->count(5)->create();
         Ride::factory()->count(10)->create();

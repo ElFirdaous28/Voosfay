@@ -18,7 +18,7 @@ class ReservationFactory extends Factory
     {
         return [
             'ride_id' => Ride::factory(),
-            'member_id' => Member::factory(),
+            'member_id' => Member::inRandomOrder()->first()->id,
             'status' => $this->faker->randomElement(['confirmed', 'pending', 'cancelled']),
         ];
     }

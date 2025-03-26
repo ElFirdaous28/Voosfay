@@ -19,7 +19,7 @@ class MemberFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
+            'user_id' => User::inRandomOrder()->first()->id,
             'phone' => $this->faker->unique()->phoneNumber,
             'vehicle_type' => $this->faker->randomElement(['Sedan', 'SUV', 'Hatchback', 'Wagon']),
             'vehicle_plate' => strtoupper(Str::random(3) . $this->faker->numerify('###')),

@@ -30,7 +30,7 @@ class RideFactory extends Factory
             'pet_allowed' => $this->faker->boolean(30),
             'conversation_allowed' => $this->faker->boolean(80),
             'music_allowed' => $this->faker->boolean(60),
-            'member_id' => Member::factory(),
+            'member_id' => Member::inRandomOrder()->first()->id,
         ];
     }
 }

@@ -16,7 +16,7 @@ class ReviewFactory extends Factory
     public function definition()
     {
         return [
-            'reservation_id' => Reservation::factory(),
+            'reservation_id' =>Reservation::inRandomOrder()->first()->id,
             'rating' => $this->faker->randomFloat(1, 1, 5),
             'comment' => $this->faker->optional()->paragraph,
         ];
