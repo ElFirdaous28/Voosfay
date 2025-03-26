@@ -9,6 +9,14 @@ class Member extends Model
 {
     /** @use HasFactory<\Database\Factories\MemberFactory> */
     use HasFactory;
+    
+    protected $fillable = [
+        'user_id',
+        'phone',
+        'vehicle_type',
+        'vehicle_plate',
+        'vehicle_color'
+    ];
 
     public function user()
     {
