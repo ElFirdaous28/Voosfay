@@ -12,18 +12,18 @@ class Report extends Model
 
     protected $fillable = [
         'reporter_id',
-        'reported_member_id',
+        'reported_user_id',
         'reason',
         'status'
     ];
 
     public function reporter()
     {
-        return $this->belongsTo(Member::class, 'reporter_id');
+        return $this->belongsTo(Vehicle::class, 'reporter_id');
     }
 
-    public function reportedMember()
+    public function reportedUser()
     {
-        return $this->belongsTo(Member::class, 'reported_member_id');
+        return $this->belongsTo(Vehicle::class, 'reported_user_id');
     }
 }

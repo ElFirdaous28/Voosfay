@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Member;
 use App\Models\Report;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -17,8 +16,8 @@ class ReportFactory extends Factory
     public function definition()
     {
         return [
-            'reporter_id' => Member::inRandomOrder()->first()->id,
-            'reported_member_id' => Member::inRandomOrder()->first()->id,
+            'reporter_id' => User::inRandomOrder()->first()->id,
+            'reported_user_id' => User::inRandomOrder()->first()->id,
             'reason' => $this->faker->sentence,
             'status' => $this->faker->randomElement(['pending', 'reviewed', 'resolved']),
         ];

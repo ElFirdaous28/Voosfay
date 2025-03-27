@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Member;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -30,7 +30,7 @@ class RideFactory extends Factory
             'pet_allowed' => $this->faker->boolean(30),
             'conversation_allowed' => $this->faker->boolean(80),
             'music_allowed' => $this->faker->boolean(60),
-            'member_id' => Member::inRandomOrder()->first()->id,
+            'user_id' => User::inRandomOrder()->first()->id,
         ];
     }
 }

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('picture')->nullable();
             $table->enum('gender', ['Male', 'Female'])->nullable();
             $table->text('bio')->nullable();
+            $table->string('phone')->unique()->nullable();
             $table->enum('role', ['user', 'admin'])->default('user');
             $table->timestamp('deleted_at')->nullable();
 

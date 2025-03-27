@@ -12,7 +12,7 @@ class Reservation extends Model
 
     protected $fillable = [
         'ride_id',
-        'member_id',
+        'user_id',
         'status'
     ];
 
@@ -21,9 +21,9 @@ class Reservation extends Model
         return $this->belongsTo(Ride::class);
     }
 
-    public function member()
+    public function user()
     {
-        return $this->belongsTo(Member::class);
+        return $this->belongsTo(User::class);
     }
 
     public function payment()

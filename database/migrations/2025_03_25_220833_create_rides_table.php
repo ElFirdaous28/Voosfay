@@ -24,7 +24,7 @@ return new class extends Migration
             $table->boolean('pet_allowed')->default(false);
             $table->boolean('conversation_allowed')->default(true);
             $table->boolean('music_allowed')->default(true);
-            $table->foreignId('member_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             
             $table->timestamps();
         });

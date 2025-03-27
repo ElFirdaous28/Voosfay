@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\Member;
 use App\Models\Reservation;
 use App\Models\Ride;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +18,7 @@ class ReservationFactory extends Factory
     {
         return [
             'ride_id' => Ride::factory(),
-            'member_id' => Member::inRandomOrder()->first()->id,
+            'user_id' => User::inRandomOrder()->first()->id,
             'status' => $this->faker->randomElement(['confirmed', 'pending', 'cancelled']),
         ];
     }

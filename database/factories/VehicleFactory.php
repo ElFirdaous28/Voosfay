@@ -7,9 +7,9 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Member>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Vehicle>
  */
-class MemberFactory extends Factory
+class VehicleFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -20,7 +20,6 @@ class MemberFactory extends Factory
     {
         return [
             'user_id' => User::inRandomOrder()->first()->id,
-            'phone' => $this->faker->unique()->phoneNumber,
             'vehicle_type' => $this->faker->randomElement(['Sedan', 'SUV', 'Hatchback', 'Wagon']),
             'vehicle_plate' => strtoupper(Str::random(3) . $this->faker->numerify('###')),
             'vehicle_color' => $this->faker->colorName,

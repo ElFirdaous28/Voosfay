@@ -10,6 +10,7 @@ use App\Models\Review;
 use App\Models\Ride;
 use App\Models\Stop;
 use App\Models\User;
+use App\Models\Vehicle;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -21,7 +22,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory()->count(5)->create();
-        Member::factory()->count(5)->create();
+        Vehicle::factory()->count(5)->create();
         Ride::factory()->count(10)->create();
         Stop::factory()->count(5)->create();
         Reservation::factory()->count(20)->create();

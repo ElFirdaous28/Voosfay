@@ -5,14 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Member extends Model
+class Vehicle extends Model
 {
-    /** @use HasFactory<\Database\Factories\MemberFactory> */
+    /** @use HasFactory<\Database\Factories\VehicleFactory> */
     use HasFactory;
     
     protected $fillable = [
         'user_id',
-        'phone',
         'vehicle_type',
         'vehicle_plate',
         'vehicle_color'
@@ -40,6 +39,6 @@ class Member extends Model
 
     public function receivedReports()
     {
-        return $this->hasMany(Report::class, 'reported_member_id');
+        return $this->hasMany(Report::class, 'reported_user_id');
     }
 }
