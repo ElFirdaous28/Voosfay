@@ -19,5 +19,8 @@ Route::prefix('v1')->group(function () {
 // profile routes
 
 Route::prefix('v1')->group(function () {
-    Route::get('profile/{userId}', [ProfileController::class, 'profile'])->middleware('auth:sanctum');
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('profile/{user}', [ProfileController::class, 'profile']);
+        Route::get('reviews/{user}', [ProfileController::class, 'reviews']);
+    });
 });
