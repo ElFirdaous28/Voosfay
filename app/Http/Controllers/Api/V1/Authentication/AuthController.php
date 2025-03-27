@@ -11,7 +11,7 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $role = User::count() === 1 ? "admin" : "user";
+        $role = User::count() === 0 ? "admin" : "user";
         $fields = $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users',

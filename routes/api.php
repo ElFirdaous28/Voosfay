@@ -14,3 +14,13 @@ Route::prefix('v1')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum')->name('logout');
 });
+
+Route::prefix('v1')->group(function () {
+    Route::get('/user', function () {
+        return 'hi user';
+    })->middleware(['auth:sanctum', 'role:user']);
+
+    Route::get('/admin', function () {
+        return 'hi admin';
+    })->middleware(['auth:sanctum', 'role:admin']);
+});
