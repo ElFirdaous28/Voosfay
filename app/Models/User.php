@@ -57,6 +57,16 @@ class User extends Authenticatable
         return $this->hasOne(Vehicle::class);
     }
 
+    public function offeredRides()
+    {
+        return $this->hasMany(Ride::class, 'user_id');
+    }
+
+    public function joinedRides()
+    {
+        return $this->hasMany(Reservation::class);
+    }
+
     public function reviewsGiven()
     {
         return $this->hasMany(Review::class, 'reviewer_id');

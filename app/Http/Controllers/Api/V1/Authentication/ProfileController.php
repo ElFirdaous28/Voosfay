@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Authentication;
 
 use App\Helpers\RatingsHelper;
+use App\Helpers\RideHelper;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -17,7 +18,9 @@ class ProfileController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'User profile retrieved successfully.',
-            'average' => RatingsHelper::user_average_rating($userId),
+            'rating_average' => RatingsHelper::userAverageRating($userId),
+            'join_rides_number'=>RideHelper::getJoinedRideCount($user),
+            'offerd_rides_number'=>RideHelper::getOfferedRideCount($user),
 
             'data' => [
                 'user' => $user,

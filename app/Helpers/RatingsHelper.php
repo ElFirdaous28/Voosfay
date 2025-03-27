@@ -8,9 +8,8 @@ use App\Models\User;
 abstract class RatingsHelper
 {
 
-    public static function user_average_rating(string $userId)
+    public static function userAverageRating(string $userId)
     {
-        $reviews = Review::all();
-        return $reviews;
+        return Review::where('reviewed_id', $userId)->avg('rating');
     }
 }
