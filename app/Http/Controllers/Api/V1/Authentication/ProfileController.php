@@ -5,17 +5,19 @@ namespace App\Http\Controllers\Api\V1\Authentication;
 use App\Helpers\RatingsHelper;
 use App\Helpers\RideHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\VehicleRequest;
 use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
     public function profile(int $user)
     {
-        $user = User::select('id', 'name', 'email','phone', 'bio', 'picture')->findOrFail($user);
+        $user = User::select('id', 'name', 'email', 'phone', 'bio', 'picture')->findOrFail($user);
 
         return response()->json([
             'success' => true,
@@ -28,6 +30,30 @@ class ProfileController extends Controller
                 'user' => $user,
                 'is_own_profile' => Auth::id() === $user->id
             ],
+        ]);
+    }
+
+    public function updateProfile(UpdateUserRequest $request)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthenticated'], 401);
+        }
+
+        $user->update($request->all());
+        if ($request->hasFile('picture')) {
+            if ($user->picture) {
+                Storage::disk('public')->delete($user->picture);
+            }
+            $path = $request->file('picture')->store('profile_pictures', 'public');
+            $user->picture = $path;
+        }
+
+        $user->update($request->except('picture'));
+
+        return response()->json([
+            'message' => 'User updated successfully',
+            'user' => $user
         ]);
     }
 
@@ -56,13 +82,14 @@ class ProfileController extends Controller
 
     public function updateVehicle(VehicleRequest $request)
     {
-        Vehicle::updateOrCreate(
+        $vehicle = Vehicle::updateOrCreate(
             ['user_id' => Auth::id()],
             $request->validated()
         );
 
         return response()->json([
-            'message' => 'Vehicle updated successfully'
+            'message' => 'Vehicle updated successfully',
+            'vehicle' => $vehicle
         ]);
     }
 }
