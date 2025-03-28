@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('user_id')->constrained()->onDelete('cascade')->unique();
-            $table->string('vehicle_type')->nullable();
-            $table->string('vehicle_plate')->nullable();
+            $table->string('vehicle_info')->nullable();
+            $table->string('vehicle_plate')->nullable()->unique();
             $table->string('vehicle_color')->nullable();
 
             $table->timestamps();
