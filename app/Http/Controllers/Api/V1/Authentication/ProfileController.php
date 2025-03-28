@@ -76,6 +76,16 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function deleteAccount()
+    {
+        $user = Auth::user();
+        $user->delete();
+
+        return response()->json([
+            'message' => 'Account deleted successfully. This is a soft delete.'
+        ]);
+    }
+
     public function reviews(User $user)
     {
         $reviews = $user->reviewsReceived()->get();
