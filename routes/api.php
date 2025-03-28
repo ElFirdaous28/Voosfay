@@ -22,6 +22,7 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('profile/{user}', [ProfileController::class, 'profile']);
         Route::put('profile', [ProfileController::class, 'updateProfile']);
+        Route::patch('profile', [ProfileController::class, 'changePassword']);
         Route::get('reviews/{user}', [ProfileController::class, 'reviews']);
         Route::get('vehicle', [ProfileController::class, 'vehicle']);
         Route::put('vehicle', [ProfileController::class, 'updateVehicle']);
