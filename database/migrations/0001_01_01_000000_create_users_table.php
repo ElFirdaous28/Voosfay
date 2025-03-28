@@ -23,7 +23,7 @@ return new class extends Migration
             $table->text('bio')->nullable();
             $table->string('phone')->unique()->nullable();
             $table->enum('role', ['user', 'admin'])->default('user');
-            $table->timestamp('deleted_at')->nullable();
+            $table->softDeletes();
 
             $table->rememberToken();
             $table->timestamps();

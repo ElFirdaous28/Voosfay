@@ -42,6 +42,7 @@ class ProfileController extends Controller
         }
 
         $user->update($request->all());
+        
         if ($request->hasFile('picture')) {
             if ($user->picture) {
                 Storage::disk('public')->delete($user->picture);
@@ -83,6 +84,33 @@ class ProfileController extends Controller
 
         return response()->json([
             'message' => 'Account deleted successfully. This is a soft delete.'
+        ]);
+    }
+
+    public function restoreAccount(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|string|min:6',
+        ]);
+
+        $user = User::onlyTrashed()->where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['error' => 'Account not found or not deleted.'], 404);
+        }
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json(['error' => 'Invalid credentials.'], 401);
+        }
+        $user->restore();
+
+        Auth::login($user);
+        $token = $user->createToken($user->name);
+
+        return response()->json([
+            'message' => 'Account restored successfully',
+            'user' => $user,
+            'token' => $token->plainTextToken
         ]);
     }
 
