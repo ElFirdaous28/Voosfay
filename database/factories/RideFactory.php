@@ -25,7 +25,7 @@ class RideFactory extends Factory
             'start_time' => $startTime,
             'available_seats' => $this->faker->numberBetween(1, 4),
             'price' => $this->faker->randomFloat(2, 10, 100),
-            'status' => $this->faker->randomElement(['pending', 'active', 'completed', 'cancelled']),
+            'status' => $this->faker->randomElement(['available', 'full', 'in_progress', 'completed', 'cancelled']),
             'luggage_allowed' => $this->faker->boolean(70),
             'pet_allowed' => $this->faker->boolean(30),
             'conversation_allowed' => $this->faker->boolean(80),

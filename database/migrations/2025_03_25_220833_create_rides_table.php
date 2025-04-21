@@ -19,7 +19,7 @@ return new class extends Migration
             $table->dateTime('start_time');
             $table->integer('available_seats');
             $table->decimal('price', 10, 2);
-            $table->enum('status', ['pending', 'active', 'completed', 'cancelled'])->default('pending');
+            $table->enum('status', ['available', 'full', 'in_progress', 'completed', 'cancelled'])->default('available');
             $table->boolean('luggage_allowed')->default(true);
             $table->boolean('pet_allowed')->default(false);
             $table->boolean('conversation_allowed')->default(true);

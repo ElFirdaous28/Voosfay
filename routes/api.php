@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\Authentication\AuthController;
 use App\Http\Controllers\Api\V1\Authentication\ProfileController;
+use App\Http\Controllers\Api\V1\RideController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,9 +18,9 @@ Route::prefix('v1')->group(function () {
 });
 
 
-// profile routes
 Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
+        // profile routes
         Route::get('profile/{user}', [ProfileController::class, 'profile']);
         Route::put('profile', [ProfileController::class, 'updateProfile']);
         Route::patch('profile', [ProfileController::class, 'changePassword']);
@@ -28,6 +29,9 @@ Route::prefix('v1')->group(function () {
         Route::get('reviews/{user}', [ProfileController::class, 'reviews']);
         Route::get('vehicle', [ProfileController::class, 'vehicle']);
         Route::put('vehicle', [ProfileController::class, 'updateVehicle']);
+
+        // rides routes
+        Route::apiResource('rides',RideController::class);
     });
     Route::put('profile/restore-account', [ProfileController::class, 'restoreAccount']);
 });
