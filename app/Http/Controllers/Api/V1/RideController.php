@@ -32,7 +32,6 @@ class RideController extends Controller
             'conversation_allowed' => ['required', 'boolean'],
             'music_allowed' => ['required', 'boolean'],
         ]);
-        // return auth()->id();
 
         $user = auth()->user();
 
@@ -61,7 +60,11 @@ class RideController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $ride = Ride::findOrFail($id);
+        return response()->json([
+            'message' => 'Ride updated successfully.',
+            'ride' => $ride,
+        ], 200);
     }
 
     /**
@@ -69,7 +72,24 @@ class RideController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->validate([
+            'start_location' => ['required', 'string', 'max:255'],
+            'ending_location' => ['required', 'string', 'max:255'],
+            'start_time' => ['required', 'date', 'after:now'],
+            'available_seats' => ['required', 'integer', 'min:1'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'luggage_allowed' => ['required', 'boolean'],
+            'pet_allowed' => ['required', 'boolean'],
+            'conversation_allowed' => ['required', 'boolean'],
+            'music_allowed' => ['required', 'boolean'],
+        ]);
+        $ride = Ride::findOrFail($id);
+        $ride->update($data);
+
+        return response()->json([
+            'message' => 'Ride updated successfully.',
+            'ride' => $ride,
+        ], 200);
     }
 
     /**
@@ -77,6 +97,8 @@ class RideController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $ride = Ride::findOrFail($id);
+        $ride->delete();
+        return response()->noContent();
     }
 }
