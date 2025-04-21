@@ -9,6 +9,7 @@ class Ride extends Model
 {
     /** @use HasFactory<\Database\Factories\RideFactory> */
     use HasFactory;
+    protected $appends = ['is_full'];
 
     protected $fillable = [
         'start_location',
@@ -37,5 +38,10 @@ class Ride extends Model
     public function reservations()
     {
         return $this->hasMany(Reservation::class);
+    }
+
+    public function getIsFullAttribute(): bool
+    {
+        return $this->available_seats <= 0;
     }
 }
