@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Ride;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -114,5 +115,91 @@ class RideController extends Controller
         $ride = Ride::findOrFail($id);
         $ride->delete();
         return response()->noContent();
+    }
+
+    public function search(Request $request)
+    {
+        $validatedData = $request->validate([
+            'start_location' => ['nullable', 'string'],
+            'ending_location' => ['nullable', 'string'],
+            'start_time' => ['nullable', 'date'],
+            'sort' => ['nullable', 'in:price_asc,price_desc,start_time,avg_rating'],
+            'pet_allowed' => ['nullable', 'boolean'],
+            'luggage_allowed' => ['nullable', 'boolean'],
+            'conversation_allowed' => ['nullable', 'boolean'],
+            'music_allowed' => ['nullable', 'boolean'],
+            'offset' => ['nullable', 'integer', 'min:0'],
+        ]);
+
+        $query = Ride::query();
+
+        $this->applyFilters($query, $validatedData);
+        $this->applySorting($query, $validatedData);
+
+        $limit = 10; // hardcoded
+        $offset = $validatedData['offset'] ?? 0;
+
+        $rides = $query->limit($limit)->offset($offset)->get();
+
+        return response()->json(['rides' => $rides], 200);
+    }
+
+
+    protected function applyFilters($query, array $filters)
+    {
+        // Location filters with index-friendly LIKE patterns
+        if (!empty($filters['start_location'])) {
+            $query->where('start_location', 'like', $filters['start_location'] . '%');
+        }
+
+        if (!empty($filters['ending_location'])) {
+            $query->where('ending_location', 'like', $filters['ending_location'] . '%');
+        }
+
+        if (!empty($filters['start_time'])) {
+            $date = Carbon::parse($filters['start_time'])->toDateString();
+            $query->whereDate('start_time', $date);
+        }
+        $booleanFilters = ['pet_allowed', 'luggage_allowed', 'conversation_allowed', 'music_allowed'];
+
+        foreach ($booleanFilters as $filter) {
+            if (isset($filters[$filter])) {
+                $query->where($filter, (bool) $filters[$filter]);
+            }
+        }
+
+        return $query;
+    }
+
+    protected function applySorting($query, array $data)
+    {
+        $sortOption = $data['sort'] ?? null;
+
+        if ($sortOption) {
+            switch ($sortOption) {
+                case 'price_asc':
+                    $query->orderBy('price', 'asc');
+                    break;
+                case 'price_desc':
+                    $query->orderBy('price', 'desc');
+                    break;
+                case 'start_time':
+                    $query->orderBy('start_time', 'asc');
+                    break;
+                case 'avg_rating':
+                    $query->leftJoin('reviews', function ($join) {
+                        $join->on('rides.user_id', '=', 'reviews.reviewed_id');
+                    })
+                        ->select('rides.*')
+                        ->selectRaw('COALESCE(AVG(reviews.rating), 0) as avg_rating')
+                        ->groupBy('rides.id')
+                        ->orderByDesc('avg_rating');
+                    break;
+            }
+        } else {
+            $query->latest('created_at');
+        }
+
+        return $query;
     }
 }

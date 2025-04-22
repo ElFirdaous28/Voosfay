@@ -36,6 +36,7 @@ Route::prefix('v1')->group(function () {
         // rides routes
         Route::apiResource('rides', RideController::class)->except(['destroy']);
         Route::patch('/rides/{ride}/status', [RideController::class, 'updateStatus']);
+        Route::get('search/rides', [RideController::class, 'search']);
 
         // stops routes
         Route::apiResource('stops', StopController::class);
