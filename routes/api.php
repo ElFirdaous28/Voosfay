@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\Authentication\ProfileController;
 use App\Http\Controllers\Api\V1\ReservationController;
 use App\Http\Controllers\Api\V1\ReviewController;
 use App\Http\Controllers\Api\V1\RideController;
+use App\Http\Controllers\Api\V1\StopController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,10 @@ Route::prefix('v1')->group(function () {
         // rides routes
         Route::apiResource('rides', RideController::class)->except(['destroy']);
         Route::patch('/rides/{ride}/status', [RideController::class, 'updateStatus']);
+
+        // stops routes
+        Route::apiResource('stops', StopController::class);
+        Route::get('rides/{ride}/stops', [StopController::class, 'rideStops']);
 
         // reservations routes
         Route::apiResource('reservation', ReservationController::class)->except(['destroy', 'update']);
