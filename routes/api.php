@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\Authentication\AuthController;
 use App\Http\Controllers\Api\V1\Authentication\ProfileController;
 use App\Http\Controllers\Api\V1\ReservationController;
+use App\Http\Controllers\Api\V1\ReviewController;
 use App\Http\Controllers\Api\V1\RideController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,7 +28,7 @@ Route::prefix('v1')->group(function () {
         Route::patch('profile', [ProfileController::class, 'changePassword']);
         Route::delete('profile', [ProfileController::class, 'deleteAccount']);
 
-        Route::get('reviews/{user}', [ProfileController::class, 'reviews']);
+        Route::get('user/reviews/{user}', [ProfileController::class, 'reviews']);
         Route::get('vehicle', [ProfileController::class, 'vehicle']);
         Route::put('vehicle', [ProfileController::class, 'updateVehicle']);
 
@@ -39,6 +40,9 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('reservation', ReservationController::class)->except(['destroy', 'update']);
         Route::get('/ride/reservations/{ride}', [ReservationController::class, 'rideReservations']);
         Route::patch('/reservations/{reservation}/status', [ReservationController::class, 'updateStatus']);
+
+        // Reviews routes
+        Route::apiResource('reviews', ReviewController::class);
     });
     Route::put('profile/restore-account', [ProfileController::class, 'restoreAccount']);
 });

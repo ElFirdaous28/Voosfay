@@ -13,18 +13,32 @@ class ReviewController extends Controller
      */
     public function index()
     {
-        return response()->json(['reiviews' => Review::paginate(10)], 200);
+        return response()->json(['reviews' => Review::with(['reviewer', 'reviewed'])->paginate(10)], 200);
     }
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'rating' => [],
-            'comment' => [],
+        $request->validate([
+            'reservation_id' => ['required', 'exists:reservations,id'],
+            'reviewed_id' => ['required', 'exists:users,id'],
+            'rating' => ['required', 'numeric', 'min:1', 'max:5'],
+            'comment' => ['nullable', 'string'],
         ]);
-        $review = Review::creat([]);
+
+        $review = auth()->user()->reviewsGiven()->create([
+            'reservation_id' => $request->reservation_id,
+            'reviewed_id' => $request->reviewed_id, // ← this must be here!
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]);
+
+
+        return response()->json([
+            'message' => 'Review submitted successfully',
+            'review' => $review,
+        ], 201);
     }
 
     /**
@@ -32,7 +46,11 @@ class ReviewController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $review = Review::findOrFail($id);
+        return $review;
+        return response()->json([
+            'review' => $review,
+        ], 200);
     }
 
     /**
@@ -40,7 +58,21 @@ class ReviewController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'rating' => ['required', 'numeric', 'min:1', 'max:5'],
+            'comment' => ['nullable', 'string'],
+        ]);
+
+        $review = Review::findOrFail($id);
+        $review->update([
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]);
+
+        return response()->json([
+            'message' => 'Review updated successfully.',
+            'review' => $review,
+        ], 200);
     }
 
     /**
@@ -48,6 +80,8 @@ class ReviewController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $review = Review::findOrFail($id);
+        $review->delete();
+        return response()->noContent();
     }
 }
