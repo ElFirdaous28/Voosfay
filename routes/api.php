@@ -32,7 +32,8 @@ Route::prefix('v1')->group(function () {
         Route::put('vehicle', [ProfileController::class, 'updateVehicle']);
 
         // rides routes
-        Route::apiResource('rides', RideController::class);
+        Route::apiResource('rides', RideController::class)->except(['destroy']);
+        Route::patch('/rides/{ride}/status', [RideController::class, 'updateStatus']);
 
         // reservations routes
         Route::apiResource('reservation', ReservationController::class)->except(['destroy', 'update']);

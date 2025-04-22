@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\Ride;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class RideController extends Controller
 {
@@ -92,13 +93,17 @@ class RideController extends Controller
         ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function updateStatus(Request $request, Ride $ride)
     {
-        $ride = Ride::findOrFail($id);
-        $ride->delete();
-        return response()->noContent();
+        $request->validate([
+            'status' => ['required', Rule::in(['full', 'in_progress', 'completed', 'cancelled'])],
+        ]);
+
+        $ride->update(['status' => $request->status]);
+
+        return response()->json([
+            'message' => "Reservation status updated to {$request->status}.",
+            'ride' => $ride,
+        ]);
     }
 }
