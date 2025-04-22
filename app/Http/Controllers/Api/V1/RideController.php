@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Ride;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class RideController extends Controller
@@ -16,6 +17,18 @@ class RideController extends Controller
     public function index()
     {
         return response()->json(['rides' => Ride::paginate(10)], 200);
+    }
+
+    public function offeredRides()
+    {
+        $rides = Auth::user()->offeredRides;
+        return response()->json(['offerd Rides history' => $rides]);
+    }
+
+    public function joinedRides()
+    {
+        $rides = Auth::user()->joinedRides;
+        return response()->json(['offerd Rides history' => $rides]);
     }
 
     /**
@@ -143,7 +156,6 @@ class RideController extends Controller
 
         return response()->json(['rides' => $rides], 200);
     }
-
 
     protected function applyFilters($query, array $filters)
     {
