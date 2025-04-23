@@ -19,7 +19,13 @@ return new class extends Migration
             $table->decimal('amount', 10, 2);
             $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
             $table->string('transaction_id')->unique();
-            
+
+            $table->string('card_last_four')->nullable();
+            $table->string('card_exp_month')->nullable();
+            $table->string('card_exp_year')->nullable();
+            $table->string('stripe_payment_intent_id')->nullable();
+
+
             $table->timestamps();
         });
     }
