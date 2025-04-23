@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\Authentication\AuthController;
 use App\Http\Controllers\Api\V1\Authentication\ProfileController;
+use App\Http\Controllers\Api\V1\ReportController;
 use App\Http\Controllers\Api\V1\ReservationController;
 use App\Http\Controllers\Api\V1\ReviewController;
 use App\Http\Controllers\Api\V1\RideController;
@@ -51,6 +52,10 @@ Route::prefix('v1')->group(function () {
 
         // Reviews routes
         Route::apiResource('reviews', ReviewController::class);
+
+        // report routes
+        Route::apiResource('reports', ReportController::class)->except('update');
+        Route::patch('reports/{report}/status', [ReportController::class, 'updateStatus']);
     });
     Route::put('profile/restore-account', [ProfileController::class, 'restoreAccount']);
 });

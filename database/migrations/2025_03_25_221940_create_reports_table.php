@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('reporter_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreignId('reported_user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('reporter_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('reported_user_id')->constrained('users')->onDelete('cascade');
             $table->text('reason');
-            $table->enum('status', ['pending', 'reviewed', 'resolved'])->default('pending');
-            
+            $table->enum('status', ['pending', 'resolved'])->default('pending');
+            $table->timestamp('deleted_at')->nullable();
+
             $table->timestamps();
         });
     }
