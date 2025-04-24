@@ -35,6 +35,7 @@ Route::prefix('v1')->group(function () {
         Route::get('user/reviews/{user}', [ProfileController::class, 'reviews']);
         Route::get('vehicle', [ProfileController::class, 'vehicle']);
         Route::put('vehicle', [ProfileController::class, 'updateVehicle']);
+        Route::patch('users/{user}/status', [ProfileController::class, 'changeStatus']);
 
         // rides routes
         Route::apiResource('rides', RideController::class)->except(['destroy']);

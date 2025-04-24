@@ -23,6 +23,8 @@ return new class extends Migration
             $table->text('bio')->nullable();
             $table->string('phone')->unique()->nullable();
             $table->enum('role', ['user', 'admin'])->default('user');
+            $table->enum('status', ['active', 'suspended', 'banned'])->default('active');
+            $table->dateTime('suspended_until')->nullable();
             $table->softDeletes();
 
             $table->rememberToken();
