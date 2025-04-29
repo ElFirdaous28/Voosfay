@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('start_location');
             $table->string('ending_location');
             $table->dateTime('start_time');
+            $table->dateTime('ending_time');
             $table->integer('available_seats');
             $table->decimal('price', 10, 2);
             $table->enum('status', ['available', 'full', 'in_progress', 'completed', 'cancelled'])->default('available');
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->boolean('pet_allowed')->default(false);
             $table->boolean('conversation_allowed')->default(true);
             $table->boolean('music_allowed')->default(true);
+            $table->boolean('food_allowed')->default(true);
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             
             $table->timestamps();

@@ -18,11 +18,13 @@ class RideFactory extends Factory
     public function definition(): array
     {
         $startTime = $this->faker->dateTimeBetween('now', '+1 month');
-        
+        $endingTime = $this->faker->dateTimeBetween('now', '+1 month +2hour');
+
         return [
             'start_location' => $this->faker->city,
             'ending_location' => $this->faker->city,
             'start_time' => $startTime,
+            'ending_time' => $endingTime,
             'available_seats' => $this->faker->numberBetween(1, 4),
             'price' => $this->faker->randomFloat(2, 10, 100),
             'status' => $this->faker->randomElement(['available', 'full', 'in_progress', 'completed', 'cancelled']),
@@ -30,6 +32,7 @@ class RideFactory extends Factory
             'pet_allowed' => $this->faker->boolean(30),
             'conversation_allowed' => $this->faker->boolean(80),
             'music_allowed' => $this->faker->boolean(60),
+            'food_allowed' => $this->faker->boolean(60),
             'user_id' => User::inRandomOrder()->first()->id,
         ];
     }

@@ -25,11 +25,10 @@ class ProfileController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'User profile retrieved successfully.',
-            'rating_average' => RatingsHelper::userAverageRating($user->id),
-            'join_rides_number' => RideHelper::getJoinedRideCount($user),
-            'offerd_rides_number' => RideHelper::getOfferedRideCount($user),
-
             'data' => [
+                'rating_average' => RatingsHelper::userAverageRating($user->id) ?? 0,
+                'join_rides_number' => RideHelper::getJoinedRideCount($user),
+                'offerd_rides_number' => RideHelper::getOfferedRideCount($user),
                 'user' => $user,
                 'is_own_profile' => Auth::id() === $user->id
             ],
@@ -38,6 +37,7 @@ class ProfileController extends Controller
 
     public function updateProfile(UpdateUserRequest $request)
     {
+        // return $request;
         $user = Auth::user();
         if (!$user) {
             return response()->json(['error' => 'Unauthenticated'], 401);
@@ -118,17 +118,30 @@ class ProfileController extends Controller
 
     public function reviews(User $user)
     {
-        $reviews = $user->reviewsReceived()->get();
+        $reviews = $user->reviewsReceived()->with(['reviewer' => function ($query) {
+            $query->select('id', 'name', 'picture');
+        }])->get();
+        $reviews_number = $reviews->count();
+
+        $rating_distribution = $reviews->groupBy('rating')->map->count();
+        $rating_percentage = [];
+        if ($reviews_number > 0) {
+            for ($i = 1; $i <= 5; $i++) {
+                $rating_percentage["{$i}_star"] = ($rating_distribution[$i] ?? 0) / $reviews_number * 100;
+            }
+        }
 
         return response()->json([
             'success' => true,
             'message' => 'User reviews retrieved successfully.',
+            'reviews_number' => $reviews_number,
             'reviews' => $reviews,
-            'rating_average' => RatingsHelper::userAverageRating($user->id),
-            'rating_average_last_month' => RatingsHelper::userAverageRatingLastMonth($user->id),
-
+            'rating_average' => RatingsHelper::userAverageRating($user->id) ?? 0,
+            'rating_average_last_month' => RatingsHelper::userAverageRatingLastMonth($user->id) ?? 0,
+            'rating_distribution' => $rating_percentage
         ]);
     }
+
     public function vehicle()
     {
         $vehicle = Auth::user()->vehicle;

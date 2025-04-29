@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Helpers\RatingsHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Ride;
 use Carbon\Carbon;
@@ -40,12 +41,14 @@ class RideController extends Controller
             'start_location' => ['required', 'string', 'max:255'],
             'ending_location' => ['required', 'string', 'max:255'],
             'start_time' => ['required', 'date', 'after:now'],
+            'ending_time' => ['required', 'date', 'after:now'],
             'available_seats' => ['required', 'integer', 'min:1'],
             'price' => ['required', 'numeric', 'min:0'],
             'luggage_allowed' => ['required', 'boolean'],
             'pet_allowed' => ['required', 'boolean'],
             'conversation_allowed' => ['required', 'boolean'],
             'music_allowed' => ['required', 'boolean'],
+            'food_allowed' => ['required', 'boolean'],
         ]);
 
         $user = auth()->user();
@@ -54,12 +57,14 @@ class RideController extends Controller
             'start_location' => $validated['start_location'],
             'ending_location' => $validated['ending_location'],
             'start_time' => $validated['start_time'],
+            'ending_time' => $validated['ending_time'],
             'available_seats' => $validated['available_seats'],
             'price' => $validated['price'],
             'luggage_allowed' => $validated['luggage_allowed'],
             'pet_allowed' => $validated['pet_allowed'],
             'conversation_allowed' => $validated['conversation_allowed'],
             'music_allowed' => $validated['music_allowed'],
+            'food_allowed' => $validated['food_allowed'],
             'status' => 'available', // default status
         ]);
 
@@ -91,12 +96,14 @@ class RideController extends Controller
             'start_location' => ['required', 'string', 'max:255'],
             'ending_location' => ['required', 'string', 'max:255'],
             'start_time' => ['required', 'date', 'after:now'],
+            'ending_time' => ['required', 'date', 'after:now'],
             'available_seats' => ['required', 'integer', 'min:1'],
             'price' => ['required', 'numeric', 'min:0'],
             'luggage_allowed' => ['required', 'boolean'],
             'pet_allowed' => ['required', 'boolean'],
             'conversation_allowed' => ['required', 'boolean'],
             'music_allowed' => ['required', 'boolean'],
+            'food_allowed' => ['required', 'boolean'],
         ]);
         $ride = Ride::findOrFail($id);
         $ride->update($data);
@@ -135,12 +142,14 @@ class RideController extends Controller
         $validatedData = $request->validate([
             'start_location' => ['nullable', 'string'],
             'ending_location' => ['nullable', 'string'],
+            'available_seats' => ['nullable', 'integer'],
             'start_time' => ['nullable', 'date'],
             'sort' => ['nullable', 'in:price_asc,price_desc,start_time,avg_rating'],
             'pet_allowed' => ['nullable', 'boolean'],
             'luggage_allowed' => ['nullable', 'boolean'],
             'conversation_allowed' => ['nullable', 'boolean'],
             'music_allowed' => ['nullable', 'boolean'],
+            'food_allowed' => ['nullable', 'boolean'],
             'offset' => ['nullable', 'integer', 'min:0'],
         ]);
 
@@ -149,17 +158,24 @@ class RideController extends Controller
         $this->applyFilters($query, $validatedData);
         $this->applySorting($query, $validatedData);
 
-        $limit = 10; // hardcoded
+        $limit = 3; // hardcoded
         $offset = $validatedData['offset'] ?? 0;
 
         $rides = $query->limit($limit)->offset($offset)->get();
+        $rides->transform(function ($ride) {
+            $ride->rating_average = RatingsHelper::userAverageRating($ride->user_id) ?? 0;
+            $ride->driver_name = $ride->user->name;
+            return $ride;
+        });
 
-        return response()->json(['rides' => $rides], 200);
+        return response()->json([
+            'rides' => $rides,
+            'next_offset' => $offset + $limit
+        ], 200);
     }
 
     protected function applyFilters($query, array $filters)
     {
-        // Location filters with index-friendly LIKE patterns
         if (!empty($filters['start_location'])) {
             $query->where('start_location', 'like', $filters['start_location'] . '%');
         }
@@ -172,7 +188,10 @@ class RideController extends Controller
             $date = Carbon::parse($filters['start_time'])->toDateString();
             $query->whereDate('start_time', $date);
         }
-        $booleanFilters = ['pet_allowed', 'luggage_allowed', 'conversation_allowed', 'music_allowed'];
+        if (!empty($filters['available_seats'])) {
+            $query->where('available_seats', '>=', $filters['available_seats']);
+        }
+        $booleanFilters = ['pet_allowed', 'luggage_allowed', 'conversation_allowed', 'music_allowed', 'food_allowed'];
 
         foreach ($booleanFilters as $filter) {
             if (isset($filters[$filter])) {

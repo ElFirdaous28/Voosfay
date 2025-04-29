@@ -3,24 +3,25 @@
 namespace App\Helpers;
 
 use App\Models\Review;
-use App\Models\User;
 use Carbon\Carbon;
 
 abstract class RatingsHelper
 {
-
     public static function userAverageRating(string $userId)
     {
-        return Review::where('reviewed_id', $userId)->avg('rating');
+        $avg = Review::where('reviewed_id', $userId)->avg('rating');
+        return $avg !== null ? round($avg, 2) : null;
     }
 
     public static function userAverageRatingLastMonth(string $userId)
     {
-        $lastMonth = Carbon::now()->subMonth();
+        $startOfLastMonth = Carbon::now()->subMonth()->startOfMonth();
+        $endOfLastMonth = Carbon::now()->subMonth()->endOfMonth();
 
-        return Review::where('reviewed_id', $userId)
-            ->whereMonth('created_at', $lastMonth->month)
-            ->whereYear('created_at', $lastMonth->year)
+        $avg = Review::where('reviewed_id', $userId)
+            ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
             ->avg('rating');
+
+        return $avg !== null ? round($avg, 2) : null;
     }
 }

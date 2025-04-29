@@ -19,7 +19,7 @@ class ReportFactory extends Factory
             'reporter_id' => User::inRandomOrder()->first()->id,
             'reported_user_id' => User::inRandomOrder()->first()->id,
             'reason' => $this->faker->sentence,
-            'status' => $this->faker->randomElement(['pending', 'reviewed', 'resolved']),
+            'status' => $this->faker->randomElement(['pending', 'resolved']),
         ];
     }
 }
