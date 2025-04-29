@@ -15,6 +15,7 @@ class Ride extends Model
         'start_location',
         'ending_location',
         'start_time',
+        'ending_time',
         'available_seats',
         'price',
         'status',

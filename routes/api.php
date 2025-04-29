@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\ReportController;
 use App\Http\Controllers\Api\V1\ReservationController;
 use App\Http\Controllers\Api\V1\ReviewController;
 use App\Http\Controllers\Api\V1\RideController;
+use App\Http\Controllers\Api\V1\StatisticsController;
 use App\Http\Controllers\Api\V1\StopController;
 use App\Http\Controllers\Api\V1\WebhookController;
 use Illuminate\Http\Request;
@@ -63,6 +64,9 @@ Route::prefix('v1')->group(function () {
         // paymetn routes
         Route::post('payment/{reservation}', [PaymentController::class, 'createPaymentIntent']);
         Route::post('/stripe/webhook', [WebhookController::class, 'handleStripeWebhook']);
+
+        // statistics
+        Route::get('statistics',[StatisticsController::class,'index']);
     });
     Route::put('profile/restore-account', [ProfileController::class, 'restoreAccount']);
 });

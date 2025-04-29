@@ -80,9 +80,8 @@ class RideController extends Controller
      */
     public function show(string $id)
     {
-        $ride = Ride::findOrFail($id);
+        $ride = Ride::with('user:id,name,picture')->findOrFail($id);
         return response()->json([
-            'message' => 'Ride updated successfully.',
             'ride' => $ride,
         ], 200);
     }
@@ -161,7 +160,7 @@ class RideController extends Controller
         $limit = 3; // hardcoded
         $offset = $validatedData['offset'] ?? 0;
 
-        $rides = $query->limit($limit)->offset($offset)->get();
+        $rides = $query->where('status','available')->limit($limit)->offset($offset)->get();
         $rides->transform(function ($ride) {
             $ride->rating_average = RatingsHelper::userAverageRating($ride->user_id) ?? 0;
             $ride->driver_name = $ride->user->name;
