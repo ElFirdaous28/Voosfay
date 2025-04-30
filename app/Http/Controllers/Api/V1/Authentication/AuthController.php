@@ -11,7 +11,7 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $role = User::count() === 0 ? "admin" : "user";
+        $role = User::count() === 0 ? "super_admin" : "user";
         $fields = $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users',
@@ -35,9 +35,9 @@ class AuthController extends Controller
             'email' => 'required|email|exists:users',
             'password' => 'required'
         ]);
-    
+
         $user = User::where('email', $request->email)->first();
-    
+
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'errors' => [
@@ -45,14 +45,14 @@ class AuthController extends Controller
                 ]
             ], 422);
         }
-    
+
         $token = $user->createToken($user->name);
-    
+
         return response()->json([
             'user' => $user,
             'token' => $token->plainTextToken
         ]);
-    }    
+    }
 
     public function logout(Request $request)
     {

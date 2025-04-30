@@ -164,33 +164,4 @@ class ProfileController extends Controller
             'vehicle' => $vehicle
         ]);
     }
-
-    public function changeStatus(Request $request, User $user)
-    {
-        $request->validate([
-            'status' => 'required|in:active,suspended,banned',
-            'suspend_duration' => 'nullable|in:1,10,15,30',
-            'suspend_until' => 'nullable|date|after:now',
-        ]);
-
-        if ($request->status === 'suspended') {
-            if ($request->suspend_until) {
-                $user->suspended_until = Carbon::parse($request->suspend_until);
-            } elseif ($request->suspend_duration) {
-                $user->suspended_until = now()->addDays((int) $request->suspend_duration);
-            } else {
-                return response()->json(['message' => 'Suspension requires a duration or end date.'], 422);
-            }
-        } else {
-            $user->suspended_until = null;
-        }
-
-        $user->status = $request->status;
-        $user->save();
-
-        return response()->json([
-            'message' => "User status changed to '{$user->status}'.",
-            'user' => $user
-        ]);
-    }
 }

@@ -17,12 +17,12 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            
+
             $table->string('picture')->nullable();
             $table->enum('gender', ['Male', 'Female'])->nullable();
             $table->text('bio')->nullable();
             $table->string('phone')->unique()->nullable();
-            $table->enum('role', ['user', 'admin'])->default('user');
+            $table->enum('role', ['user', 'admin', 'super_admin'])->default('user');
             $table->enum('status', ['active', 'suspended', 'banned'])->default('active');
             $table->dateTime('suspended_until')->nullable();
             $table->softDeletes();

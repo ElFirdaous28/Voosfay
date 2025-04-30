@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\v1\AdminController;
+use App\Http\Controllers\Api\v1\AdminManagementController;
 use App\Http\Controllers\Api\V1\Authentication\AuthController;
 use App\Http\Controllers\Api\V1\Authentication\ProfileController;
 use App\Http\Controllers\Api\V1\PaymentController;
@@ -15,18 +17,18 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::prefix('v1')->group(function () {
-    
+
     Route::post('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/login', [AuthController::class, 'login'])->name('login');
-    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum')->name('logout');
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware(['auth:sanctum', 'active'])->name('logout');
     Route::get('/user', function (Request $request) {
         return $request->user();
-    })->middleware('auth:sanctum');
+    })->middleware(['auth:sanctum', 'active']);
 });
 
 
 Route::prefix('v1')->group(function () {
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware(['auth:sanctum', 'active'])->group(function () {
         // profile routes
         Route::get('profile/{user}', [ProfileController::class, 'profile']);
         Route::put('profile', [ProfileController::class, 'updateProfile']);
@@ -36,7 +38,8 @@ Route::prefix('v1')->group(function () {
         Route::get('user/reviews/{user}', [ProfileController::class, 'reviews']);
         Route::get('vehicle', [ProfileController::class, 'vehicle']);
         Route::put('vehicle', [ProfileController::class, 'updateVehicle']);
-        Route::patch('users/{user}/status', [ProfileController::class, 'changeStatus']);
+        Route::patch('users/{user}/status', [AdminController::class, 'changeStatus']);
+        Route::post('/admin/add', [AdminController::class, 'addAdmin']);
 
         // rides routes
         Route::apiResource('rides', RideController::class)->except(['destroy']);
@@ -66,7 +69,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/stripe/webhook', [WebhookController::class, 'handleStripeWebhook']);
 
         // statistics
-        Route::get('statistics',[StatisticsController::class,'index']);
+        Route::get('statistics', [StatisticsController::class, 'index']);
     });
     Route::put('profile/restore-account', [ProfileController::class, 'restoreAccount']);
 });
