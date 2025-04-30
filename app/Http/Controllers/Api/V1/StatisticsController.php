@@ -43,7 +43,7 @@ class StatisticsController extends Controller
     {
         return [
             'total' => Ride::count(),
-            'this_week' => Ride::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count(),
+            'this_month' => Ride::whereMonth('created_at', now()->month)->count(),
             'total_reservations' => Reservation::count(),
             'pending' => Ride::where('status', 'pending')->count(),
             'completed' => Ride::where('status', 'completed')->count(),
