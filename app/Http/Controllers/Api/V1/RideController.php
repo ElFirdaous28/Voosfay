@@ -17,20 +17,49 @@ class RideController extends Controller
      */
     public function index()
     {
-        return response()->json(['rides' => Ride::paginate(10)], 200);
+        return response()->json(['rides' => Ride::paginate(10)->orderBy('start_time', 'desc')], 200);
     }
 
-    public function offeredRides()
+    public function offeredRides(Request $request)
     {
-        $rides = Auth::user()->offeredRides;
-        return response()->json(['offerd Rides history' => $rides]);
+        $limit = 3;
+        $offset = $request->offset ?? 0;
+
+        $rides = auth()->user()->offeredRides()->with('user')
+            ->orderBy('start_time', 'desc')
+            ->limit($limit)
+            ->offset($offset)
+            ->get();
+
+        $rides->each(function ($ride) {
+            $ride->rating_average = RatingsHelper::userAverageRating($ride->user_id);
+        });
+
+        return response()->json(['rides' => $rides]);
     }
 
-    public function joinedRides()
+    public function joinedRides(Request $request)
     {
-        $rides = Auth::user()->joinedRides;
-        return response()->json(['offerd Rides history' => $rides]);
+        $limit = 3;
+        $offset = $request->offset ?? 0;
+
+        $joined = auth()->user()->joinedRides()
+            ->with('ride.user')
+            ->orderBy('start_time', 'desc')
+            ->limit($limit)
+            ->offset($offset)
+            ->get();
+
+        $rides = $joined->map(function ($join) {
+            $ride = $join->ride;
+            $ride->rating_average = RatingsHelper::userAverageRating($ride->user_id);
+            $ride->user = $ride->user;
+            return $ride;
+        });
+
+        return response()->json(['rides' => $rides]);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -150,6 +179,8 @@ class RideController extends Controller
             'music_allowed' => ['nullable', 'boolean'],
             'food_allowed' => ['nullable', 'boolean'],
             'offset' => ['nullable', 'integer', 'min:0'],
+            'male' => ['nullable', 'in:0,1'],
+            'female' => ['nullable', 'in:0,1'],
         ]);
 
         $query = Ride::query();
@@ -157,10 +188,10 @@ class RideController extends Controller
         $this->applyFilters($query, $validatedData);
         $this->applySorting($query, $validatedData);
 
-        $limit = 3; // hardcoded
+        $limit = 3;
         $offset = $validatedData['offset'] ?? 0;
 
-        $rides = $query->where('status','available')->limit($limit)->offset($offset)->get();
+        $rides = $query->where('status', 'available')->limit($limit)->offset($offset)->get();
         $rides->transform(function ($ride) {
             $ride->rating_average = RatingsHelper::userAverageRating($ride->user_id) ?? 0;
             $ride->driver_name = $ride->user->name;
@@ -196,6 +227,18 @@ class RideController extends Controller
             if (isset($filters[$filter])) {
                 $query->where($filter, (bool) $filters[$filter]);
             }
+        }
+
+        if (!empty($filters['male']) && empty($filters['female'])) {
+            $query->whereHas('user', function ($q) {
+                $q->where('gender', 'male');
+            });
+        }
+
+        if (!empty($filters['female']) && empty($filters['male'])) {
+            $query->whereHas('user', function ($q) {
+                $q->where('gender', 'female');
+            });
         }
 
         return $query;

@@ -46,7 +46,7 @@ Route::prefix('v1')->group(function () {
         Route::post('admin/users/{user}/warn', [ReportController::class, 'sendWarning']);
 
         // rides routes
-        Route::apiResource('rides', RideController::class)->except(['destroy']);
+        Route::apiResource('rides', RideController::class);
         Route::patch('/rides/{ride}/status', [RideController::class, 'updateStatus']);
         Route::get('search/rides', [RideController::class, 'search']);
         Route::get('user/rides/offered', [RideController::class, 'offeredRides']);

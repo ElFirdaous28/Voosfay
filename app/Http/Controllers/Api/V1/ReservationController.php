@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
+use App\Models\Ride;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -20,9 +21,17 @@ class ReservationController extends Controller
 
     public function rideReservations(string $ride)
     {
-        $reservations = Reservation::where('ride_id', $ride)->get();
+        $pending = Reservation::where('ride_id', $ride)
+            ->where('status', 'pending')
+            ->get();
+
+        $accepted = Reservation::where('ride_id', $ride)
+            ->where('status', 'confirmed')
+            ->get();
+
         return response()->json([
-            'reservations' => $reservations,
+            'pending' => $pending,
+            'accepted' => $accepted,
         ], 200);
     }
 
@@ -34,6 +43,14 @@ class ReservationController extends Controller
         $request->validate([
             'ride_id' => ['required', 'integer', 'exists:rides,id'],
         ]);
+
+        $ride = Ride::find($request->ride_id);
+
+        if ($ride->status !== 'available') {
+            return response()->json([
+                'message' => 'You cannot reserve a seat on this ride. It is not available.',
+            ], 403);
+        }
 
         $reservation = Reservation::firstOrCreate([
             'user_id' => auth()->id(),
