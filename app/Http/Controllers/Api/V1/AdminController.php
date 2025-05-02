@@ -14,6 +14,26 @@ use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
+    public function users(Request $request)
+    {
+        $query = User::orderBy('id', 'desc')->withCount('reportsAgainst');
+        $query->where('role', '!=', 'super_admin');
+
+        if ($request->has('role') && in_array($request->role, ['admin', 'user'])) {
+            $query->where('role', $request->role);
+        }
+
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('name', 'ilike', '%' . $request->search . '%');
+        }
+
+        $users = $query->get();
+
+        return response()->json([
+            'users' => $users,
+        ]);
+    }
+
     public function addAdmin(Request $request)
     {
         if (Auth::user()->role !== 'super_admin') {
@@ -46,22 +66,30 @@ class AdminController extends Controller
         ], 201);
     }
 
+    public function forceDeleteUser($id)
+    {
+        $user = User::withTrashed()->find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
+
+        if ($user) {
+            $user->forceDelete();
+            return response()->json(['message' => 'User permanently deleted.'], 200);
+        }
+    }
+
     public function changeStatus(Request $request, User $user)
     {
-        $request->validate([
+       $val= $request->validate([
             'status' => 'required|in:active,suspended,banned',
-            'suspend_duration' => 'nullable|in:1,10,15,30',
-            'suspend_until' => 'nullable|date|after:now',
+            'suspend_duration' => 'required_if:status,suspended|nullable',
         ]);
+        return $val;
 
         if ($request->status === 'suspended') {
-            if ($request->suspend_until) {
-                $user->suspended_until = Carbon::parse($request->suspend_until);
-            } elseif ($request->suspend_duration) {
-                $user->suspended_until = now()->addDays((int) $request->suspend_duration);
-            } else {
-                return response()->json(['message' => 'Suspension requires a duration or end date.'], 422);
-            }
+            $user->suspended_until = now()->addDays((int) $request->suspend_duration);
         } else {
             $user->suspended_until = null;
         }
@@ -70,7 +98,7 @@ class AdminController extends Controller
         $user->save();
 
         return response()->json([
-            'message' => "User status changed to '{$user->status}'.",
+            'message' => "User status successfully changed to '{$user->status}'.",
             'user' => $user
         ]);
     }

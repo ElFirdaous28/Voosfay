@@ -4,19 +4,28 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Report;
+use App\Models\User;
+use App\Notifications\SendWarning;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $reports = Report::with('reporter', 'reportedUser')->get();
-
-        return response()->json($reports);
-    }
+        $query = Report::with(['reporter', 'reportedUser']);
+    
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+    
+        $reports = $query->latest()->get();
+    
+        return response()->json(['reports' => $reports]);
+    }    
 
     /**
      * Store a newly created resource in storage.
@@ -29,7 +38,7 @@ class ReportController extends Controller
         ]);
 
         $report = Report::create([
-            'reporter_id' => auth()->id(),
+            'reporter_id' => Auth::id(),
             'reported_user_id' => $validatedData['reported_user_id'],
             'reason' => $validatedData['reason'],
         ]);
@@ -42,14 +51,20 @@ class ReportController extends Controller
      */
     public function show($id)
     {
-        $report = Report::findOrFail($id);
+        $report = Report::with([
+            'reporter',
+            'reportedUser' => function ($query) {
+                $query->withCount('reportsAgainst');
+            }
+        ])->findOrFail($id);
+
         return response()->json($report);
     }
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {   
+    {
         //
     }
 
@@ -75,5 +90,15 @@ class ReportController extends Controller
         $report->delete();
 
         return response()->json(['message' => 'Report deleted successfully']);
+    }
+
+    public function sendWarning($userId)
+    {
+        $user = User::findOrFail($userId);
+        $user->notify(new SendWarning());
+
+        return response()->json([
+            'message' => 'Warning notification has been sent to the user.'
+        ], 200);
     }
 }

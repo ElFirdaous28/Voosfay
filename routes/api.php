@@ -38,8 +38,12 @@ Route::prefix('v1')->group(function () {
         Route::get('user/reviews/{user}', [ProfileController::class, 'reviews']);
         Route::get('vehicle', [ProfileController::class, 'vehicle']);
         Route::put('vehicle', [ProfileController::class, 'updateVehicle']);
-        Route::patch('users/{user}/status', [AdminController::class, 'changeStatus']);
-        Route::post('/admin/add', [AdminController::class, 'addAdmin']);
+        // admin
+        Route::post('/admin/users/add', [AdminController::class, 'addAdmin']);
+        Route::get('/admin/users', [AdminController::class, 'users']);
+        Route::delete('/admin/users/{id}/force-delete', [AdminController::class, 'forceDeleteUser']);
+        Route::patch('admin/users/{user}/status', [AdminController::class, 'changeStatus']);
+        Route::post('admin/users/{user}/warn', [ReportController::class, 'sendWarning']);
 
         // rides routes
         Route::apiResource('rides', RideController::class)->except(['destroy']);
