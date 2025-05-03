@@ -8,6 +8,7 @@ use App\Models\Report;
 use App\Models\Reservation;
 use App\Models\Ride;
 use App\Models\User;
+use App\Models\WalletTransaction;
 use Illuminate\Http\Request;
 
 class StatisticsController extends Controller
@@ -62,8 +63,10 @@ class StatisticsController extends Controller
     private function getPaymentStats()
     {
         return [
-            'total_received' => Payment::sum('amount'),
-            'this_month' => Payment::whereMonth('created_at', now()->month)->sum('amount'),
+            'total_received' => WalletTransaction::where('wallet_id', 1)->sum('amount'),
+            'this_month' => WalletTransaction::where('wallet_id', 1)
+                ->whereMonth('created_at', now()->month)
+                ->sum('amount'),
         ];
     }
 }

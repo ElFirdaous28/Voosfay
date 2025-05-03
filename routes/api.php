@@ -69,10 +69,6 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('reports', ReportController::class)->except('update');
         Route::patch('reports/{report}/status', [ReportController::class, 'updateStatus']);
 
-        // paymetn routes
-        Route::post('payment/{reservation}', [PaymentController::class, 'createPaymentIntent']);
-        Route::post('/stripe/webhook', [WebhookController::class, 'handleStripeWebhook']);
-
         // statistics
         Route::get('statistics', [StatisticsController::class, 'index']);
     });
