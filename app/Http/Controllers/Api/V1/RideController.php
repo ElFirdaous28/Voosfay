@@ -5,13 +5,25 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helpers\RatingsHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Ride;
+use App\Models\User;
+use App\Models\Wallet;
+use App\Services\RidePaymentService;
+use App\Services\WalletService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class RideController extends Controller
 {
+    protected WalletService $walletService;
+    protected RidePaymentService $ridePaymentService;
+
+    public function __construct(WalletService $walletService, RidePaymentService $ridePaymentService)
+    {
+        $this->walletService = $walletService;
+        $this->ridePaymentService = $ridePaymentService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -148,13 +160,42 @@ class RideController extends Controller
             'status' => ['required', Rule::in(['full', 'in_progress', 'completed', 'cancelled'])],
         ]);
 
+        if ($ride->status === 'completed') {
+            return response()->json(['message' => 'Ride has already been completed. Status cannot be updated.'], 400);
+        }
+
         $ride->update(['status' => $request->status]);
 
+        // Handle ride completion
+        if ($request->status === 'completed') {
+            return $this->completeRide($ride);
+        }
+
         return response()->json([
-            'message' => "Reservation status updated to {$request->status}.",
+            'message' => "Ride status updated to {$request->status}.",
             'ride' => $ride,
         ]);
     }
+
+
+    private function completeRide(Ride $ride)
+    {
+        foreach ($ride->reservations()->where('status', 'confirmed')->get() as $reservation) {
+            $passenger = $reservation->user;
+            $driver = $ride->user;
+            $price = $ride->price;
+
+            try {
+                $this->ridePaymentService->transfer($passenger, $driver, $price, $ride);
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 400);
+            }
+        }
+
+        return response()->json(['message' => 'Ride completed and payments processed.']);
+    }
+
+
     /**
      * Remove the specified resource from storage.
      */
@@ -179,8 +220,8 @@ class RideController extends Controller
             'music_allowed' => ['nullable', 'boolean'],
             'food_allowed' => ['nullable', 'boolean'],
             'offset' => ['nullable', 'integer', 'min:0'],
-            'male' => ['nullable', 'in:0,1'],
-            'female' => ['nullable', 'in:0,1'],
+            'male' => ['nullable', 'boolean'],
+            'female' => ['nullable', 'boolean'],
         ]);
 
         $query = Ride::query();
@@ -231,13 +272,13 @@ class RideController extends Controller
 
         if (!empty($filters['male']) && empty($filters['female'])) {
             $query->whereHas('user', function ($q) {
-                $q->where('gender', 'male');
+                $q->where('gender', 'Male');
             });
         }
 
         if (!empty($filters['female']) && empty($filters['male'])) {
             $query->whereHas('user', function ($q) {
-                $q->where('gender', 'female');
+                $q->where('gender', 'Female');
             });
         }
 

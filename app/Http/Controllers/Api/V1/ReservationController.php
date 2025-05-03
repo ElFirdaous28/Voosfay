@@ -52,6 +52,18 @@ class ReservationController extends Controller
             ], 403);
         }
 
+        $currentReservations = $ride->reservations()->where('status', 'confirmed')->count();
+
+        if ($ride->available_seats <= $currentReservations) {
+            return response()->json([
+                'message' => 'No available seats for this ride.',
+            ], 400);
+        }
+
+        if ($ride->available_seats - $currentReservations === 1) {
+            $ride->update(['status' => 'full']);
+        }
+
         $reservation = Reservation::firstOrCreate([
             'user_id' => auth()->id(),
             'ride_id' => $request->ride_id,
@@ -62,7 +74,6 @@ class ReservationController extends Controller
             'reservation' => $reservation,
         ], 201);
     }
-
 
     /**
      * Display the specified resource.

@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\V1\RideController;
 use App\Http\Controllers\Api\V1\StatisticsController;
 use App\Http\Controllers\Api\V1\StopController;
 use App\Http\Controllers\Api\V1\WebhookController;
+use App\Http\Controllers\WalletController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -76,4 +77,11 @@ Route::prefix('v1')->group(function () {
         Route::get('statistics', [StatisticsController::class, 'index']);
     });
     Route::put('profile/restore-account', [ProfileController::class, 'restoreAccount']);
+});
+
+// wallet routes
+Route::prefix('v1/wallet')->middleware('auth:sanctum')->group(function () {
+    Route::post('/add', [WalletController::class, 'addToWallet']);
+    Route::post('/withdraw', [WalletController::class, 'requestWithdrawal']);
+    Route::get('/transactions', [WalletController::class, 'listTransactions']);
 });

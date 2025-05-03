@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Authentication;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -20,6 +21,10 @@ class AuthController extends Controller
         $fields['role'] = $role;
 
         $user = User::create($fields);
+        // Wallet::create([
+        //     'user_id' => $user->id,
+        //     'balance' => 0,
+        // ]);
 
         $token = $user->createToken($request->name);
 

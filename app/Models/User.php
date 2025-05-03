@@ -29,7 +29,13 @@ class User extends Authenticatable
         'bio',
         'role'
     ];
-
+    // creat a walet when ever a user is created
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            $user->wallet()->create();
+        });
+    }
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -86,5 +92,10 @@ class User extends Authenticatable
     public function reportsAgainst()
     {
         return $this->hasMany(Report::class, 'reported_user_id');
+    }
+
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
     }
 }

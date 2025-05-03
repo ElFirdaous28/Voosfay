@@ -21,13 +21,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->count(5)->create();
-        Vehicle::factory()->count(5)->create();
-        Ride::factory()->count(10)->create();
-        Stop::factory()->count(5)->create();
-        Reservation::factory()->count(20)->create();
-        Payment::factory()->count(15)->create();
-        Review::factory()->count(10)->create();
-        Report::factory()->count(3)->create();
+        $this->call(PlatformWalletSeeder::class);
+        // User::factory()->count(5)->create();
+        // Vehicle::factory()->count(5)->create();
+        Ride::factory()->count(1)->create();
+        // Stop::factory()->count(5)->create();
+        Reservation::factory()->count(2)->create();
+        // Payment::factory()->count(15)->create();
+        // Review::factory()->count(10)->create();
+        // Report::factory()->count(3)->create();
     }
 }
