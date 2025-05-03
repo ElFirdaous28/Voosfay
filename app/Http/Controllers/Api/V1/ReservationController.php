@@ -25,7 +25,7 @@ class ReservationController extends Controller
             ->where('status', 'pending')
             ->get();
 
-        $accepted = Reservation::where('ride_id', $ride)
+        $accepted = Reservation::where('ride_id', $ride)->with('user')
             ->where('status', 'confirmed')
             ->get();
 

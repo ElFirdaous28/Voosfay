@@ -45,6 +45,7 @@ class RideController extends Controller
 
         $rides->each(function ($ride) {
             $ride->rating_average = RatingsHelper::userAverageRating($ride->user_id);
+            $ride->offered = true;
         });
 
         return response()->json(['rides' => $rides]);
@@ -54,23 +55,22 @@ class RideController extends Controller
     {
         $limit = 3;
         $offset = $request->offset ?? 0;
-
-        $joined = auth()->user()->joinedRides()
-            ->with('ride.user')
+    
+        $rides = auth()->user()->joinedRides()
+            ->with('user') // ride creator
             ->orderBy('start_time', 'desc')
             ->limit($limit)
             ->offset($offset)
             ->get();
-
-        $rides = $joined->map(function ($join) {
-            $ride = $join->ride;
+    
+        $rides->each(function ($ride) {
             $ride->rating_average = RatingsHelper::userAverageRating($ride->user_id);
-            $ride->user = $ride->user;
-            return $ride;
+            $ride->joined = true;
         });
-
+    
         return response()->json(['rides' => $rides]);
     }
+    
 
 
     /**

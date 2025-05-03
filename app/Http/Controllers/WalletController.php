@@ -49,8 +49,11 @@ class WalletController extends Controller
     public function listTransactions()
     {
         $user = Auth::user();
-        $transactions = $user->wallet->transactions;
+        $wallet = $user->wallet;
+        $wallet->load('transactions');
 
-        return response()->json($transactions);
+        return response()->json([
+            'wallet' => $wallet
+        ]);
     }
 }

@@ -71,8 +71,16 @@ class User extends Authenticatable
 
     public function joinedRides()
     {
-        return $this->hasMany(Reservation::class);
+        return $this->hasManyThrough(
+            Ride::class,
+            Reservation::class,
+            'user_id', // user
+            'id',
+            'id', // reservation ride
+            'ride_id'
+        );
     }
+
 
     public function reviewsGiven()
     {

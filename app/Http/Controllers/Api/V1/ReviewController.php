@@ -29,7 +29,7 @@ class ReviewController extends Controller
 
         $review = auth()->user()->reviewsGiven()->create([
             'reservation_id' => $request->reservation_id,
-            'reviewed_id' => $request->reviewed_id, // ← this must be here!
+            'reviewed_id' => $request->reviewed_id,
             'rating' => $request->rating,
             'comment' => $request->comment,
         ]);
