@@ -13,6 +13,7 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+    'platform_commission_percent' => env('PLATFORM_COMMISSION_PERCENT', 15),
 
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),

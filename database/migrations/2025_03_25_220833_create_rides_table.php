@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('rides', function (Blueprint $table) {
             $table->id();
-            
+
             $table->string('start_location');
             $table->string('ending_location');
             $table->dateTime('start_time');
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->boolean('music_allowed')->default(true);
             $table->boolean('food_allowed')->default(true);
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            
+
             $table->timestamps();
         });
     }
