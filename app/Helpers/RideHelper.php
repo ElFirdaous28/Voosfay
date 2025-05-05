@@ -8,7 +8,9 @@ class RideHelper
 {
     public static function getJoinedRideCount(User $user)
     {
-        return $user->joinedRides()->whereIn('status', ['confirmed', 'completed'])->count();
+        return $user->joinedRides()
+            ->where('reservations.status', 'confirmed')
+            ->where('rides.status', 'completed')->count();
     }
 
     public static function getOfferedRideCount(User $user)

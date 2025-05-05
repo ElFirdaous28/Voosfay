@@ -86,7 +86,6 @@ class AdminController extends Controller
             'status' => 'required|in:active,suspended,banned',
             'suspend_duration' => 'required_if:status,suspended|nullable',
         ]);
-        return $val;
 
         if ($request->status === 'suspended') {
             $user->suspended_until = now()->addDays((int) $request->suspend_duration);
