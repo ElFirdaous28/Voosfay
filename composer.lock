@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "08737a25c854e3d95df181bf0488ad7a",
+    "content-hash": "0e4438d4bdbfb143a589d6aafaeca11f",
     "packages": [
         {
             "name": "brick/math",
@@ -1053,6 +1053,73 @@
                 }
             ],
             "time": "2025-02-03T10:55:03+00:00"
+        },
+        {
+            "name": "jiordiviera/laravel-log-cleaner",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jiordiviera/laravel-log-cleaner.git",
+                "reference": "f70cae77f2481927aba013d3ffe9ca6d54c46e26"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jiordiviera/laravel-log-cleaner/zipball/f70cae77f2481927aba013d3ffe9ca6d54c46e26",
+                "reference": "f70cae77f2481927aba013d3ffe9ca6d54c46e26",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "^7.0|^8.0|^9.0|^10.0|^11.0",
+                "illuminate/support": "^7.0|^8.0|^9.0|^10.0|^11.0",
+                "php": "^7.0|^8.0|^8.1|^8.2"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^5.0|^6.0|^7.0|^8.0|^9.0",
+                "pestphp/pest": "^1.23|^2.0",
+                "pestphp/pest-plugin-laravel": "^1.4|^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "JiordiViera\\LaravelLogCleaner\\LaravelLogCleanerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JiordiViera\\LaravelLogCleaner\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jiordi Viera",
+                    "email": "jiordikengne@gmail.com",
+                    "homepage": "https://github.com/jiordiviera",
+                    "role": "Owner"
+                }
+            ],
+            "description": "A Laravel package to easily clean the log files.",
+            "keywords": [
+                "artisan",
+                "cleaner",
+                "laravel",
+                "laravel package",
+                "log",
+                "log files",
+                "log management",
+                "logging",
+                "maintenance"
+            ],
+            "support": {
+                "issues": "https://github.com/jiordiviera/laravel-log-cleaner/issues",
+                "source": "https://github.com/jiordiviera/laravel-log-cleaner/tree/v1.0.3"
+            },
+            "time": "2024-12-03T14:05:01+00:00"
         },
         {
             "name": "laravel/framework",

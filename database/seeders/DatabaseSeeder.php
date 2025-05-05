@@ -11,6 +11,9 @@ use App\Models\Ride;
 use App\Models\Stop;
 use App\Models\User;
 use App\Models\Vehicle;
+use App\Models\Wallet;
+use App\Models\WalletTransaction;
+use App\Models\WithdrawalRequest;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -25,8 +28,11 @@ class DatabaseSeeder extends Seeder
         Vehicle::factory()->count(5)->create();
         Ride::factory()->count(1)->create();
         Stop::factory()->count(5)->create();
-        Reservation::factory()->count(2)->create();
+        Reservation::factory()->count(5)->create();
         Review::factory()->count(10)->create();
         Report::factory()->count(3)->create();
+        Wallet::factory()->count(10)->create();
+        WalletTransaction::factory()->count(5)->create();
+        WithdrawalRequest::factory()->count(5)->create();
     }
 }

@@ -4,23 +4,21 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Helpers\RatingsHelper;
 use App\Http\Controllers\Controller;
+use App\Jobs\MarkRideCompletedJob;
+use App\Jobs\MarkRideInProgressJob;
+use App\Jobs\UpdateRideStatusJob;
 use App\Models\Ride;
-use App\Models\User;
-use App\Models\Wallet;
 use App\Services\RidePaymentService;
-use App\Services\WalletService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class RideController extends Controller
 {
-    protected WalletService $walletService;
     protected RidePaymentService $ridePaymentService;
 
-    public function __construct(WalletService $walletService, RidePaymentService $ridePaymentService)
+    public function __construct( RidePaymentService $ridePaymentService)
     {
-        $this->walletService = $walletService;
         $this->ridePaymentService = $ridePaymentService;
     }
 
@@ -55,22 +53,22 @@ class RideController extends Controller
     {
         $limit = 3;
         $offset = $request->offset ?? 0;
-    
+
         $rides = auth()->user()->joinedRides()
             ->with('user') // ride creator
             ->orderBy('start_time', 'desc')
             ->limit($limit)
             ->offset($offset)
             ->get();
-    
+
         $rides->each(function ($ride) {
             $ride->rating_average = RatingsHelper::userAverageRating($ride->user_id);
             $ride->joined = true;
         });
-    
+
         return response()->json(['rides' => $rides]);
     }
-    
+
 
 
     /**
@@ -91,9 +89,9 @@ class RideController extends Controller
             'music_allowed' => ['required', 'boolean'],
             'food_allowed' => ['required', 'boolean'],
         ]);
-
+    
         $user = auth()->user();
-
+    
         $ride = $user->offeredRides()->create([
             'start_location' => $validated['start_location'],
             'ending_location' => $validated['ending_location'],
@@ -108,7 +106,12 @@ class RideController extends Controller
             'food_allowed' => $validated['food_allowed'],
             'status' => 'available', // default status
         ]);
-
+        
+        $startTime = Carbon::parse($ride->start_time);
+        $endTime = Carbon::parse($ride->ending_time);
+        MarkRideInProgressJob::dispatch($ride)->delay($startTime);
+        MarkRideCompletedJob::dispatch($ride, $this->ridePaymentService)->delay($endTime);
+    
         return response()->json([
             'message' => 'Ride created successfully.',
             'ride' => $ride,
@@ -166,33 +169,10 @@ class RideController extends Controller
 
         $ride->update(['status' => $request->status]);
 
-        // Handle ride completion
-        if ($request->status === 'completed') {
-            return $this->completeRide($ride);
-        }
-
         return response()->json([
             'message' => "Ride status updated to {$request->status}.",
             'ride' => $ride,
         ]);
-    }
-
-
-    private function completeRide(Ride $ride)
-    {
-        foreach ($ride->reservations()->where('status', 'confirmed')->get() as $reservation) {
-            $passenger = $reservation->user;
-            $driver = $ride->user;
-            $price = $ride->price;
-
-            try {
-                $this->ridePaymentService->transfer($passenger, $driver, $price, $ride);
-            } catch (\Exception $e) {
-                return response()->json(['error' => $e->getMessage()], 400);
-            }
-        }
-
-        return response()->json(['message' => 'Ride completed and payments processed.']);
     }
 
 
