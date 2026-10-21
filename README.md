@@ -1,70 +1,206 @@
-<<<<<<< HEAD
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# 🚗 Voosfay — Plateforme de Covoiturage Local
 
-## About Laravel
+Voosfay est une plateforme web de covoiturage local qui facilite la mise en relation entre conducteurs et passagers souhaitant partager leurs trajets. Son objectif est de réduire les coûts de transport, d'optimiser l'utilisation des véhicules et de favoriser une mobilité plus économique et collaborative.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+**Notre mission :** Rendre les déplacements quotidiens plus accessibles grâce au partage de trajets.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+</div>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 🌍 Présentation du projet
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Les déplacements quotidiens représentent un coût important pour de nombreux travailleurs, étudiants et particuliers. Parallèlement, de nombreux véhicules circulent avec des places disponibles.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Voosfay propose une solution à ces problématiques en permettant aux utilisateurs de publier, rechercher et partager des trajets locaux.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+La plateforme vise à offrir une expérience simple et conviviale, tout en favorisant la confiance entre les membres grâce aux profils utilisateurs, aux évaluations et au système de signalement.
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🎯 Objectifs
 
-### Premium Partners
+- **Pour les passagers :** Trouver et réserver facilement des trajets correspondant à leurs besoins.
+- **Pour les conducteurs :** Proposer des trajets, partager les frais et optimiser l'utilisation de leur véhicule.
+- **Pour la communauté :** Encourager une mobilité collaborative et réduire les coûts liés aux déplacements.
+- **Pour l'administration :** Assurer le suivi des utilisateurs, des signalements et de l'activité de la plateforme.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+---
 
-## Contributing
+## 👥 Public cible
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Voosfay s'adresse principalement aux :
+- Travailleurs effectuant des trajets domicile-travail.
+- Étudiants se déplaçant quotidiennement vers leurs établissements.
+- Particuliers recherchant des solutions de transport économiques.
+- Conducteurs souhaitant partager les frais de leurs déplacements.
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## ✨ Fonctionnalités
 
-## Security Vulnerabilities
+*Les fonctionnalités ci-dessous décrivent le périmètre fonctionnel du projet. Leur disponibilité dépend de l'état actuel de l'implémentation.*
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 👤 Gestion des utilisateurs
+- Inscription et connexion sécurisées.
+- Authentification par adresse e-mail et mot de passe.
+- Réinitialisation du mot de passe.
+- Consultation des profils utilisateurs.
+- Modification des informations personnelles.
+- Consultation des notes, avis et statistiques de trajets.
 
-## License
+### 🚘 Gestion des trajets
+- Publication de trajets avec les informations du véhicule.
+- Définition du lieu de départ et de destination.
+- Planification de la date et de l'heure du trajet.
+- Définition du prix et des places disponibles.
+- Prise en charge prévue des trajets ponctuels et récurrents.
+- Modification et annulation des trajets publiés.
+- Gestion des demandes de réservation.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-=======
-# Rydeo_fil_rouge
->>>>>>> 189432043c7d16b04bae1ae66c9fd34ea8afdf5e
+### 🔎 Recherche et réservation
+- Recherche de trajets selon les lieux de départ et d'arrivée.
+- Filtrage selon la date, l'heure et le prix.
+- Consultation des détails d'un trajet.
+- Réservation d'une place auprès d'un conducteur.
+
+### ⭐ Évaluations et avis
+- Attribution d'une note sous forme d'étoiles.
+- Publication de commentaires après un trajet.
+- Consultation des avis associés aux utilisateurs et aux trajets.
+- Affichage de la réputation des membres.
+
+### 📚 Historique des trajets
+- Consultation des trajets proposés en tant que conducteur.
+- Consultation des trajets effectués en tant que passager.
+- Suivi des participations et des réservations.
+
+### 🚨 Signalements et modération
+- Signalement d'un conducteur, d'un passager ou d'un trajet.
+- Consultation des signalements par l'administration.
+- Envoi d'avertissements aux utilisateurs.
+- Suspension temporaire ou blocage de comptes selon les règles de la plateforme.
+
+
+### 🛠️ Administration et tableau de bord
+- Consultation et gestion des comptes utilisateurs.
+- Traitement des signalements.
+- Suivi des trajets et des évaluations.
+- Statistiques globales sur l'activité de la plateforme.
+- Suivi des transactions et des paiements, selon les fonctionnalités implémentées.
+
+---
+
+## 🧰 Technologies utilisées
+
+| Domaine | Technologies |
+| :--- | :--- |
+| **Back-end** | PHP, Laravel 12 |
+| **Front-end** | HTML, CSS, JavaScript |
+| **Framework CSS** | Tailwind CSS |
+| **Base de données** | SQL, MySQL prévu |
+| **Gestion des dépendances PHP** | Composer |
+| **Conception UML** | StarUML |
+| **Maquettage UI/UX** | Figma |
+| **Versionnement** | Git, GitHub |
+| **Gestion de projet** | Jira |
+
+---
+
+## ⚙️ Prérequis
+
+Avant d'installer Voosfay, assurez-vous de disposer des éléments suivants :
+- PHP 8.2 ou supérieur.
+- Composer.
+- MySQL si vous utilisez cette base de données.
+- Node.js et npm si vous devez compiler les ressources front-end.
+- Git.
+
+*Les extensions PHP nécessaires dépendent de la configuration de votre environnement et des dépendances installées.*
+
+---
+
+## 🚀 Installation
+
+### 1. Cloner le dépôt
+```bash
+git clone https://github.com/ElFirdaous28/Voosfay.git
+cd Voosfay
+```
+
+### 2. Installer les dépendances PHP
+```bash
+composer install
+```
+
+### 3. Configurer les variables d'environnement
+Créez votre fichier `.env` à partir du fichier d'exemple :
+```bash
+cp .env.example .env
+```
+Générez ensuite la clé de chiffrement Laravel :
+```bash
+php artisan key:generate
+```
+
+### 4. Configurer la base de données
+Créez une base de données MySQL, puis configurez les paramètres suivants dans votre fichier `.env` :
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=voosfay
+DB_USERNAME=root
+DB_PASSWORD=
+```
+> *Adaptez les identifiants à votre environnement local.*
+
+### 5. Exécuter les migrations
+```bash
+php artisan migrate
+```
+*Cette commande crée les tables définies dans les migrations du projet.*
+
+### 6. Installer les dépendances front-end
+Si le projet utilise les ressources front-end gérées par npm :
+```bash
+npm install
+npm run dev
+```
+Pour compiler les ressources destinées à la production :
+```bash
+npm run build
+```
+
+### 7. Lancer le serveur de développement
+```bash
+php artisan serve
+```
+Ouvrez ensuite l'adresse suivante dans votre navigateur :
+`http://127.0.0.1:8000`
+
+---
+
+## 🔐 Configuration
+
+Certaines fonctionnalités nécessitent une configuration supplémentaire dans le fichier `.env`.
+
+### Recommandations de configuration de l'environnement
+- Utilisez un fichier `.env` distinct pour chaque environnement.
+- Ne versionnez jamais le fichier `.env`.
+- Vérifiez les paramètres de base de données avant d'exécuter les migrations.
+
+---
+
+
+## 📄 Licence
+
+Ce projet est distribué sous licence MIT si cette licence est bien celle retenue pour l'ensemble du projet. Consultez le fichier `LICENSE` du dépôt pour connaître les conditions applicables.
+
+<div align="center">
+
+**Voosfay — Partageons nos trajets, réduisons nos coûts. 🚗**
+
+</div>
