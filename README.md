@@ -193,14 +193,3 @@ Certaines fonctionnalités nécessitent une configuration supplémentaire dans l
 - Vérifiez les paramètres de base de données avant d'exécuter les migrations.
 
 ---
-
-
-## 📄 Licence
-
-Ce projet est distribué sous licence MIT si cette licence est bien celle retenue pour l'ensemble du projet. Consultez le fichier `LICENSE` du dépôt pour connaître les conditions applicables.
-
-<div align="center">
-
-**Voosfay — Partageons nos trajets, réduisons nos coûts. 🚗**
-
-</div>
